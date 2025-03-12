@@ -1,3 +1,3 @@
 window.env = {
-    API_KEY: "%SHEET_URL%",
+   GOOGLE_SHEET_URL: "%SHEET_URL%",
 };
