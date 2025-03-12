@@ -1,0 +1,582 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>gistly.ai - Get the gist, fast!</title>
+    <style>
+        :root {
+            --primary: #4F46E5;
+            --primary-dark: #4338CA;
+            --secondary: #10B981;
+            --text-dark: #1F2937;
+            --text-light: #6B7280;
+            --background: #F9FAFB;
+            --white: #FFFFFF;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+        }
+        
+        body {
+            background-color: var(--background);
+            color: var(--text-dark);
+            line-height: 1.6;
+        }
+        
+        header {
+            background-color: var(--white);
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+            padding: 1rem 0;
+            position: fixed;
+            width: 100%;
+            z-index: 100;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 2rem;
+        }
+        
+        .header-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .logo {
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: var(--primary);
+        }
+        
+        .logo span {
+            color: var(--secondary);
+        }
+        
+        .cta-button {
+            background-color: var(--primary);
+            color: var(--white);
+            border: none;
+            padding: 0.7rem 1.5rem;
+            border-radius: 6px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        
+        .cta-button:hover {
+            background-color: var(--primary-dark);
+        }
+        
+        .hero {
+            padding-top: 120px;
+            padding-bottom: 4rem;
+            text-align: center;
+        }
+        
+        .hero h1 {
+            font-size: 2.8rem;
+            margin-bottom: 1.5rem;
+            max-width: 800px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+        
+        .hero p {
+            font-size: 1.2rem;
+            color: var(--text-light);
+            max-width: 700px;
+            margin-left: auto;
+            margin-right: auto;
+            margin-bottom: 2rem;
+        }
+        
+        .waitlist-form {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 3rem;
+            gap: 0.5rem;
+        }
+        
+        .waitlist-form input {
+            padding: 0.7rem 1rem;
+            width: 100%;
+            max-width: 350px;
+            border: 1px solid #D1D5DB;
+            border-radius: 6px;
+            font-size: 1rem;
+        }
+        
+        .demo-image {
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+            border-radius: 12px;
+            max-width: 100%;
+            height: auto;
+            margin-top: 2rem;
+        }
+        
+        .features {
+            padding: 5rem 0;
+            background-color: var(--white);
+        }
+        
+        .section-title {
+            text-align: center;
+            margin-bottom: 3rem;
+            font-size: 2.2rem;
+        }
+        
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+        }
+        
+        .feature-card {
+            padding: 2rem;
+            border-radius: 8px;
+            background-color: var(--background);
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+        }
+        
+        .feature-icon {
+            background-color: rgba(79, 70, 229, 0.1);
+            width: 60px;
+            height: 60px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 12px;
+            margin-bottom: 1.5rem;
+        }
+        
+        .feature-card h3 {
+            margin-bottom: 1rem;
+            font-size: 1.3rem;
+        }
+        
+        .pricing {
+            padding: 5rem 0;
+        }
+        
+        .pricing-cards {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            margin-top: 2rem;
+        }
+        
+        .pricing-card {
+            background-color: var(--white);
+            border-radius: 8px;
+            padding: 2rem;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+            text-align: center;
+        }
+        
+        .pricing-card.featured {
+            border: 2px solid var(--primary);
+            transform: scale(1.05);
+        }
+        
+        .pricing-card h3 {
+            font-size: 1.5rem;
+            margin-bottom: 1rem;
+        }
+        
+        .price {
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 2rem;
+        }
+        
+        .price span {
+            font-size: 1rem;
+            font-weight: 400;
+            color: var(--text-light);
+        }
+        
+        .pricing-features {
+            margin-bottom: 2rem;
+            text-align: left;
+        }
+        
+        .pricing-features li {
+            margin-bottom: 0.7rem;
+            list-style-type: none;
+            position: relative;
+            padding-left: 1.5rem;
+        }
+        
+        .pricing-features li::before {
+            content: "✓";
+            color: var(--secondary);
+            position: absolute;
+            left: 0;
+        }
+        
+        .faq {
+            background-color: var(--white);
+            padding: 5rem 0;
+        }
+        
+        .faq-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(500px, 1fr));
+            gap: 2rem;
+        }
+        
+        .faq-item {
+            margin-bottom: 1.5rem;
+        }
+        
+        .faq-question {
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+            font-size: 1.1rem;
+        }
+        
+        .faq-answer {
+            color: var(--text-light);
+        }
+        
+        footer {
+            background-color: var(--text-dark);
+            color: var(--white);
+            padding: 3rem 0;
+        }
+        
+        .footer-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 2rem;
+        }
+        
+        .footer-logo {
+            font-size: 1.5rem;
+            font-weight: 700;
+        }
+        
+        .footer-links {
+            display: flex;
+            gap: 2rem;
+        }
+        
+        .footer-links a {
+            color: var(--white);
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+        
+        .footer-links a:hover {
+            color: var(--secondary);
+        }
+        
+        @media (max-width: 768px) {
+            .hero h1 {
+                font-size: 2.2rem;
+            }
+            
+            .waitlist-form {
+                flex-direction: column;
+                align-items: center;
+            }
+            
+            .footer-container {
+                flex-direction: column;
+                text-align: center;
+            }
+            
+            .faq-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .modal {
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+            background-color: rgba(0,0,0,0.4);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .modal-content {
+            background-color: #fefefe;
+            padding: 20px;
+            border: 1px solid #888;
+            width: 80%;
+            max-width: 500px;
+            border-radius: 8px;
+            text-align: center;
+        }
+
+        .close-button {
+            color: #aaa;
+            float: right;
+            font-size: 28px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        .close-button:hover,
+        .close-button:focus {
+            color: black;
+            text-decoration: none;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="container header-container">
+            <div class="logo">gistly<span>.ai</span></div>
+            <button class="cta-button" onclick="scrollToWaitlistForm()">Join Waitlist</button>
+        </div>
+    </header>
+
+    <section class="hero">
+        <div class="container">
+            <h1>Summarize Any Content in Seconds with gistly.ai</h1>
+            <p>Turn articles, YouTube videos, and podcasts into concise, actionable bullet points. Save time and extract key insights instantly.</p>
+            
+            <div class="waitlist-form">
+                <input type="email" placeholder="Enter your email address">
+                <button class="cta-button">Join Waitlist</button>
+            </div>
+        </div>
+    </section>
+
+    <section class="features">
+        <div class="container">
+            <h2 class="section-title">Powerful Summarization Features</h2>
+            
+            <div class="features-grid">
+                <div class="feature-card">
+                    <div class="feature-icon">📱</div>
+                    <h3>One-Click Summaries</h3>
+                    <p>Simply paste any URL and get an instant AI-generated summary of articles, YouTube videos, or podcast transcripts.</p>
+                </div>
+                
+                <div class="feature-card">
+                    <div class="feature-icon">🎯</div>
+                    <h3>Key Insights Extraction</h3>
+                    <p>Our advanced AI identifies and extracts the most important points from any content, saving you valuable time.</p>
+                </div>
+                
+                <div class="feature-card">
+                    <div class="feature-icon">📥</div>
+                    <h3>Export Options</h3>
+                    <p>Download your summaries as PDF or have them sent directly to your email for easy reference.</p>
+                </div>
+                
+                <div class="feature-card">
+                    <div class="feature-icon">🎙️</div>
+                    <h3>Multi-format Support</h3>
+                    <p>Works with written articles, YouTube videos, podcasts, and more - all through a single interface.</p>
+                </div>
+                
+                <div class="feature-card">
+                    <div class="feature-icon">⚡</div>
+                    <h3>API Access</h3>
+                    <p>Power users can integrate our summarization technology directly into their workflows via our robust API.</p>
+                </div>
+                
+                <div class="feature-card">
+                    <div class="feature-icon">📊</div>
+                    <h3>Custom Length Options</h3>
+                    <p>Choose between quick bullet points or more detailed summaries based on your needs.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="pricing">
+        <div class="container">
+            <h2 class="section-title">Simple, Transparent Pricing</h2>
+            
+            <div class="pricing-cards">
+                <div class="pricing-card">
+                    <h3>Free</h3>
+                    <div class="price">$0 <span>/month</span></div>
+                    <ul class="pricing-features">
+                        <li>10 summaries per month</li>
+                        <li>Basic export options</li>
+                        <li>Standard summary length</li>
+                        <li>Web access only</li>
+                    </ul>
+                    <button class="cta-button">Get Started</button>
+                </div>
+                
+                <div class="pricing-card featured">
+                    <h3>Premium</h3>
+                    <div class="price">$9 <span>/month</span></div>
+                    <ul class="pricing-features">
+                        <li>Unlimited summaries</li>
+                        <li>Advanced export options (PDF, Email)</li>
+                        <li>Customizable summary length</li>
+                        <li>Priority processing</li>
+                        <li>Mobile app access</li>
+                    </ul>
+                    <button class="cta-button" onclick="scrollToWaitlistForm()">Join Waitlist</button>
+                </div>
+                
+                <div class="pricing-card">
+                    <h3>API Access</h3>
+                    <div class="price">Custom <span>pricing</span></div>
+                    <ul class="pricing-features">
+                        <li>Pay per API call</li>
+                        <li>Volume discounts available</li>
+                        <li>Full documentation</li>
+                        <li>Dedicated support</li>
+                        <li>Custom integration options</li>
+                    </ul>
+                    <button class="cta-button">Contact Us</button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="faq">
+        <div class="container">
+            <h2 class="section-title">Frequently Asked Questions</h2>
+            
+            <div class="faq-grid">
+                <div>
+                    <div class="faq-item">
+                        <div class="faq-question">When will Gistly.ai be available?</div>
+                        <div class="faq-answer">We're currently in private beta and aim to launch publicly in Q2 2025. Join our waitlist to be among the first users and receive exclusive early access.</div>
+                    </div>
+                    
+                    <div class="faq-item">
+                        <div class="faq-question">How accurate are the AI-generated summaries?</div>
+                        <div class="faq-answer">Our AI technology extracts key points with high accuracy. The system is trained to identify and prioritize the most important information while filtering out noise and redundancy.</div>
+                    </div>
+                    
+                    <div class="faq-item">
+                        <div class="faq-question">Which content formats are supported?</div>
+                        <div class="faq-answer">Currently, we support web articles, YouTube videos, and podcast episodes with transcripts. We're constantly expanding our capabilities to include more content types.</div>
+                    </div>
+                </div>
+                
+                <div>
+                    <div class="faq-item">
+                        <div class="faq-question">Can I cancel my subscription anytime?</div>
+                        <div class="faq-answer">Yes, you can cancel your subscription at any time without any cancellation fees. Your access will continue until the end of your billing period.</div>
+                    </div>
+                    
+                    <div class="faq-item">
+                        <div class="faq-question">How does the API pricing work?</div>
+                        <div class="faq-answer">API pricing is based on the number of API calls. We offer tiered pricing with volume discounts for larger usage. Contact us for a custom quote based on your expected usage.</div>
+                    </div>
+                    
+                    <div class="faq-item">
+                        <div class="faq-question">Is there a limit to content length?</div>
+                        <div class="faq-answer">Free users can summarize content up to 3,000 words or 15-minute videos/podcasts. Premium users can summarize content up to 10,000 words or 60-minute videos/podcasts.</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <footer>
+        <div class="container footer-container">
+            <div class="footer-logo">gistly.ai</div>
+            
+            <div class="footer-links">
+                <a href="#">About</a>
+                <a href="#">Privacy Policy</a>
+                <a href="#">Terms of Service</a>
+                <a href="#">Contact</a>
+            </div>
+            
+            <div>© 2025 gistly.ai. All rights reserved.</div>
+        </div>
+    </footer>
+
+    <div id="modal" class="modal" style="display: none;">
+        <div class="modal-content">
+            <span class="close-button">&times;</span>
+            <p id="modal-message"></p>
+        </div>
+    </div>
+
+    <script>
+    
+    function scrollToWaitlistForm() {
+        const waitlistForm = document.querySelector('.waitlist-form input[type="email"]');
+        waitlistForm.scrollIntoView({ behavior: 'smooth' });
+    }
+
+    document.addEventListener('DOMContentLoaded', function() {
+        const waitlistButton = document.querySelector('.waitlist-form .cta-button');
+        const emailInput = document.querySelector('.waitlist-form input[type="email"]');
+
+        const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+        function sendEmailToGoogleSheet(email) {
+            const url = process.env.SHEET_URL; // Access the URL via Vercel environment variable
+            fetch(url, {
+                method: 'POST',
+                mode: 'no-cors',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ email: email })
+            }).then(response => {
+                console.log('Email sent to Google Sheet:', email);
+            }).catch(error => {
+                console.error('Error:', error);
+            });
+        }
+
+        waitlistButton.addEventListener('click', function(event) {
+            event.preventDefault(); // Prevent form submission
+            const email = emailInput.value;
+            
+            if (email && emailPattern.test(email)) {
+                // Email is valid
+                console.log('Email stored:', email);
+                sendEmailToGoogleSheet(email); // Send email to Google Sheet
+                showModal('Thank you for joining the waitlist! We will notify you when we launch 😊');
+                emailInput.value = ''; // Clear the input field
+            } else {
+                showModal('Please enter a valid email address 🙄');
+            }
+        });
+
+        const modal = document.getElementById('modal');
+        const modalMessage = document.getElementById('modal-message');
+        const closeButton = document.querySelector('.close-button');
+
+        function showModal(message) {
+            modalMessage.textContent = message;
+            modal.style.display = 'flex';
+        }
+
+        closeButton.addEventListener('click', function() {
+            modal.style.display = 'none';
+        });
+
+        window.addEventListener('click', function(event) {
+            if (event.target === modal) {
+                modal.style.display = 'none';
+            }
+        });
+    });
+    </script>
+</body>
+</html>
