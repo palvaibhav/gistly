@@ -529,6 +529,7 @@
 
         function sendEmailToGoogleSheet(email) {
             const url = window.env.SHEET_URL; // Access the URL via Vercel environment variable
+            console.log(url);
             fetch(url, {
                 method: 'POST',
                 mode: 'no-cors',
