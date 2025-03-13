@@ -7,7 +7,7 @@ const OpenAI = require('openai');
 
 // Set up OpenAI API
 // You'll need to set your API key as an environment variable
-const openaiApiKey = "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";
+const openaiApiKey = process.env.OPENAI_API_KEY;
 
 class URLSummarizer {
   constructor() {
