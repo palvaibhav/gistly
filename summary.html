@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>URL Summary</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background-color: #f4f4f9;
+        }
+        .container {
+            text-align: center;
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        input[type="url"] {
+            width: 80%;
+            padding: 10px;
+            margin-bottom: 10px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+        button {
+            padding: 10px 20px;
+            background-color: #4F46E5;
+            color: #fff;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #4338CA;
+        }
+        .summary {
+            margin-top: 20px;
+            text-align: left;
+            background-color: #f9fafb;
+            padding: 15px;
+            border-radius: 8px;
+            box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
+            max-height: 300px;
+            overflow-y: auto;
+            font-size: 1rem;
+            line-height: 1.5;
+            color: #333;
+        }
+        .loader {
+            border: 8px solid #f3f3f3;
+            border-top: 8px solid #4F46E5;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            animation: spin 1s linear infinite;
+            margin: 20px auto;
+        }
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Enter URL for Summary</h1>
+        <input type="url" id="urlInput" placeholder="Enter a URL" required>
+        <button onclick="generateSummary()">Get Summary</button>
+        <div class="summary" id="summary"></div>
+    </div>
+    <script>
+        async function generateSummary() {
+            const url = document.getElementById('urlInput').value;
+            if (!url) {
+                alert('Please enter a valid URL.');
+                return;
+            }
+
+            // Call your server-side endpoint to process the URL and get the summary
+            const response = await fetch('http://127.0.0.1:3000/api/summarize', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ url: url })
+            });
+
+            const data = await response.json();
+            const summaryElement = document.getElementById('summary');
+            // Add loader element
+            const loader = document.createElement('div');
+            loader.className = 'loader';
+            summaryElement.innerHTML = '';
+            summaryElement.appendChild(loader);
+            
+            const summaryData = data.summary;
+            if (summaryData.summary) {
+                let summaryHtml = `<strong>Summary:</strong> ${summaryData.summary}<br><br>`;
+                if (summaryData.key_points && summaryData.key_points.length > 0) {
+                    summaryHtml += '<strong>Key Points:</strong><ul>';
+                    summaryData.key_points.forEach(point => {
+                        summaryHtml += `<li>${point}</li>`;
+                    });
+                    summaryHtml += '</ul>';
+                }
+                if (summaryData.conclusion) {
+                    summaryHtml += `<strong>Conclusion:</strong> ${summaryData.conclusion}`;
+                }
+                // Remove loader after response
+                summaryElement.removeChild(loader);
+                summaryElement.innerHTML = summaryHtml;
+            } else {
+                // Remove loader after response
+                summaryElement.removeChild(loader);
+                summaryElement.innerText = 'Failed to generate summary.';
+            }
+        }
+    </script>
+</body>
+</html>
